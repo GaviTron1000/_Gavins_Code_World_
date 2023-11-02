@@ -1,7 +1,6 @@
 let dataFiltrationStep1 = view() {
     AADRiskyUsers
-    | where not(tostring(RiskLevel) has_any("high", "medium", "hidden", "none", "unknownFutureValue"))
-    | where tostring(RiskLevel) has_any("low")
+    | where (tostring(RiskLevel) has_any("low", "medium", "hidden", "high", "none", "unknownFutureValue"))
     | where not(tostring(RiskState) has_any("none", "confirmedSafe", "remediated", "dismissed", "unknownFutureValue"))
     | where tostring(RiskState) has_any("atRisk", "confirmedCompromised")
     | where TimeGenerated > ago(30m) and TimeGenerated < ago(10m)
@@ -20,4 +19,4 @@ let dataFiltrationStep2 = view() {
     | where CreatedDateTime > ago(30m) and CreatedDateTime < ago(10m)
     | project CreatedDateTime, UserPrincipalName, UserType, ResourceDisplayName, AuthenticationRequirement, AuthenticationDetails, IPAddress, DeviceDetail, LocationDetails, Location, Status, ConditionalAccessPolicies, ConditionalAccessStatus, RiskDetail
 };
-union withsource="Medium Risk Users Report" dataFiltrationStep1, dataFiltrationStep2
+union withsource="All Risky Users Report" dataFiltrationStep1, dataFiltrationStep2
