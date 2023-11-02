@@ -1,0 +1,1 @@
+gwmi Win32_Product -filter "name like 'Java%' AND vendor like 'Oracle%' AND (version like '[%].%' OR version like '%.[%].%')" | % { $_.Uninstall() }
